@@ -9,7 +9,7 @@ type Query {
 
 const resolvers = {
     Query: {
-        sayHi: () => 'Hello World!'
+        sayHi: () => 'Hello World'
     }
 }
 
