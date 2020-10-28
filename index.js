@@ -8,6 +8,7 @@ const Post = require('./models/Post')
 
 const typeDefs = gql`
 type Query {
+    sayHi: String!, 
     getPosts
 }
 `
