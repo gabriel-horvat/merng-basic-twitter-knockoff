@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {SECRET_KEY} = require('../../config')
 const { extendResolversFromInterfaces } = require('apollo-server')
+const {UserInputError} = require('apollo-server')
 
 module.exports = {
     Mutation: {
@@ -11,11 +12,17 @@ module.exports = {
             {
                 registerInput: {username, email, password, confirmPassword }
             },
-             context,
-              info
               ){
             // validate user data
             // make sure user does not exist already
+            const user = await User.findOne({username})
+            if (user) {
+                throw new UserInputError('Username is taken', {
+                    errors: {
+                        username: 'This username is taken dog'
+                    }
+                })
+            }
             // hash password and create auth token
             password = await bcrypt.hash(password, 12)
 
