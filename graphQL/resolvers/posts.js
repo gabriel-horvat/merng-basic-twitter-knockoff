@@ -1,3 +1,5 @@
+const {AuthenticationError} = require('apollo-server')
+
 const Post = require('../../models/Post')
 const auth = require('../../utils/auth')
 
@@ -27,6 +29,7 @@ module.exports = {
         }
     },
     Mutation: {
+        
         async createPost(_, {body}, context){
 const user = auth(context)
 console.log(user);
@@ -38,6 +41,24 @@ const newPost = new Post({
 })
 const post = await newPost.save()
 return post
+        }
+    },
+
+    async deletePost(_, {postId}, context){
+        const user = auth(context)
+        // find post make sure only creator of post can delete post
+        try {
+            const post = await Post.findById(postId)
+            if (user.username === post.username) {
+                await post.delete()
+                return 'post deleted!'
+            }
+            else{
+throw new AuthenticationError('Action not permitted!')
+            }
+            
+        } catch (err) {
+            throw new Error(err)
         }
     }
 }
