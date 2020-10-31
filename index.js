@@ -7,7 +7,8 @@ const resolvers = require('./graphQL/resolvers')
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    context: ({req}) => ({ req})
 });
 
 mongoose.connect(MONGODB, {useNewUrlParser: true})
